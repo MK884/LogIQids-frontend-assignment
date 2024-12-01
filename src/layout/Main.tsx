@@ -1,12 +1,11 @@
-import React from "react";
 import { GrPowerReset } from "react-icons/gr";
+import { Board } from "@/components";
 
 function Main() {
   return (
-    <main className="flex-1 bg-gradient">
-
+    <main className="h-full overflow-hidden flex flex-col bg-gradient w-dvw">
       {/* board header */}
-      <div className="bg-black/30 w-full backdrop-blur-sm py-3 px-4 flex items-center justify-between">
+      <div className="bg-black/30 w-dvw backdrop-blur-sm py-3 px-4 flex items-center justify-between">
         <span className="text-md font-semibold text-white whitespace-nowrap">
           Trello board
         </span>
@@ -23,7 +22,10 @@ function Main() {
           </div>
         </button>
       </div>
-      
+
+      {/* board */}
+
+      <Board />
     </main>
   );
 }
