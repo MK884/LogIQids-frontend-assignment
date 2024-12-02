@@ -1,50 +1,21 @@
-# React + TypeScript + Vite
+# This Repository Represents Frontend Assignment Given By LogIQids
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# About
 
-Currently, two official plugins are available:
+#### Create a Trello-like board (Trello) that allows users to manage tasks by adding, editing, deleting, and rearranging task cards within multiple lists. This assignment focuses on implementing drag-and-drop functionality, dynamic state updates, and an interactive UI. Use React/Next for this assignment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Functionality
 
-## Expanding the ESLint configuration
+[x] **Add and Manage Lists**: User can add a new list by entering a title, delete a list along with its associated cards, and rename a list title.
+[x] **Add and Manage Cards**: User can add a new card to a specific list by entering a title, Edit the card title, description and due date, and delete a card.
+[x] **Drag-and-Drop**: User can drag and drop cards as well as lists.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# TechStack
 
-- Configure the top-level `parserOptions` property like this:
+### React (Typescript)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Tailwind CSS
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+# Screenshot
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+<img src="public/cover.png" style="border-radius:10px" />
