@@ -11,10 +11,12 @@ function Card({
   card,
   listId,
   listTitle,
+  setDragCard,
 }: {
   card: ICard;
   listTitle: string;
   listId: Id;
+  setDragCard: React.Dispatch<Id | null>;
 }) {
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
@@ -111,11 +113,13 @@ function Card({
   return (
     <>
       <li
-        className="isolate relative shadow-sm cursor-pointer"
+        className="isolate relative shadow-sm cursor-pointer active:opacity-50 "
         draggable
+        onClick={openDialog}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={openDialog}
+        onDragStart={() => setDragCard(card.id)}
+        onDragEnd={() => setDragCard(null)}
       >
         <div className="bg-background-card flex-1 text-sm px-3 py-2 h-[42px] flex items-center rounded-lg border-2 hover:border-background-primary">
           <div className="flex items-center justify-between w-full">

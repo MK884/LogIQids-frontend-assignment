@@ -3,7 +3,16 @@ import Card from "./Card";
 import { AddCard } from "./AddButton";
 import { useAppContext } from "@/context";
 import React from "react";
-function List({ list }: { list: IList }) {
+import Indicator from "./Indicator";
+function List({
+  list,
+  setDragCard,
+  onCardDrop,
+}: {
+  list: IList;
+  setDragCard: React.Dispatch<Id | null>;
+  onCardDrop: (cardId: number) => void;
+}) {
   const { reducer } = useAppContext();
   const [title, setTitle] = React.useState<string>(list.title ?? "");
   const [isEditing, setisEditing] = React.useState<boolean>(false);
@@ -62,14 +71,18 @@ function List({ list }: { list: IList }) {
         </div>
 
         {/* cards */}
-        <ol className="p-2 flex-1 flex flex-col overflow-y-auto overflow-x-hidden gap-2 list-none">
-          {list.cards?.map((card) => (
-            <Card
-              key={card.id}
-              card={card}
-              listId={list.id}
-              listTitle={list.title}
-            />
+        <ol className="p-2 flex-1 flex flex-col overflow-y-auto overflow-x-hidden list-none">
+          <Indicator onDrop={() => onCardDrop(0)} />
+          {list?.cards?.map((card, idx) => (
+            <React.Fragment key={card.id}>
+              <Card
+                card={card}
+                listId={list.id}
+                listTitle={list.title}
+                setDragCard={setDragCard}
+              />
+              <Indicator onDrop={() => onCardDrop(idx + 1)} />
+            </React.Fragment>
           ))}
         </ol>
 

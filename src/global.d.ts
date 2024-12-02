@@ -22,6 +22,7 @@ type ListActions =
   | { type: "ADD_CARD"; payload: { cardTitle: string; listId: Id } }
   | { type: "UPDATE_CARD"; payload: { card: Partial<ICard>; listId: Id } }
   | { type: "REMOVE_CARD"; payload: { cardId: Id; listId: Id } }
+  | { type: "REORDER_CARDS"; payload: { cards: Array<ICard>; listId: Id } }
   | { type: "RESET_ALL" };
 
 interface IAppContext {

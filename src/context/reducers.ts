@@ -62,6 +62,13 @@ export const reducer = (
       );
     }
 
+    case "REORDER_CARDS": {
+      const { cards, listId } = action.payload;
+      return state?.map((list) =>
+        list.id === listId ? { ...list, cards } : list
+      );
+    }
+
     case "RESET_ALL": {
       return [];
     }
