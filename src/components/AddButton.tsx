@@ -1,8 +1,16 @@
 import React, { ReactNode } from "react";
 import { FaPlus, FaXmark } from "react-icons/fa6";
 
-export function AddList() {
+export function AddList({ onAdd }: { onAdd: (title: string) => void }) {
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
+  const [title, setTitle] = React.useState<string>("");
+
+  const handleTitle = () => {
+    onAdd(title);
+    setIsClicked(false);
+    setTitle("");
+  };
+
   return (
     <>
       {isClicked ? (
@@ -10,13 +18,18 @@ export function AddList() {
           <div className="mb-3">
             <input
               type="text"
-              className="w-full pl-2 text-sm py-1 rounded-sm"
               autoFocus
               placeholder="Enter list name..."
+              className="w-full pl-2 text-sm py-1 rounded-sm"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="flex justify-start items-center gap-2">
-            <button className="text-sm text-white bg-background-primary rounded-md py-[6px] px-3">
+            <button
+              onClick={handleTitle}
+              className="text-sm text-white bg-background-primary rounded-md py-[6px] px-3"
+            >
               Add list
             </button>
             <button
@@ -42,8 +55,16 @@ export function AddList() {
   );
 }
 
-export function AddCard() {
+export function AddCard({ onAdd }: { onAdd: (title: string) => void }) {
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
+
+  const [title, setTitle] = React.useState<string>("");
+
+  const handleTitle = () => {
+    onAdd(title);    
+    setIsClicked(false);
+    setTitle("");
+  };
   return (
     <>
       {isClicked ? (
@@ -53,10 +74,15 @@ export function AddCard() {
               autoFocus
               className="w-full pl-2 text-sm py-1 border-2 outline-none shadow-sm rounded-lg resize-none"
               placeholder="Enter a title or paste a link"
+              value={title}
+              onChange={e=>setTitle(e.target.value)}
             />
           </div>
           <div className="flex justify-start items-center gap-2">
-            <button className="text-sm text-white bg-background-primary rounded-md py-[6px] px-3">
+            <button
+              onClick={handleTitle}
+              className="text-sm text-white bg-background-primary rounded-md py-[6px] px-3"
+            >
               Add card
             </button>
             <button
