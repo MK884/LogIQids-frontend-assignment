@@ -23,9 +23,16 @@ type ListActions =
   | { type: "UPDATE_CARD"; payload: { card: Partial<ICard>; listId: Id } }
   | { type: "REMOVE_CARD"; payload: { cardId: Id; listId: Id } }
   | { type: "REORDER_CARDS"; payload: { cards: Array<ICard>; listId: Id } }
+  | { type: "REORDER_LISTS"; payload: { newList: Array<IList> } }
   | { type: "RESET_ALL" };
+
+type dragElementType = "CARD" | "LIST";
+
+type draggingelement = null | { id: Id; type: dragElementType };
 
 interface IAppContext {
   lists: Array<IList>;
   reducer: React.Dispatch<ListActions>;
+  draggingElement: draggingelement;
+  setDraggingElement: React.Dispatch<draggingelement>;
 }

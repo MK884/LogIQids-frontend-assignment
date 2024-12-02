@@ -6,16 +6,22 @@ import React from "react";
 import Indicator from "./Indicator";
 function List({
   list,
-  setDragCard,
   onCardDrop,
+  onDragLeves,
+  onDragStarts,
 }: {
   list: IList;
-  setDragCard: React.Dispatch<Id | null>;
   onCardDrop: (cardId: number) => void;
+  onDragStarts: (e: React.DragEvent<HTMLLIElement>, id: Id) => void;
+  onDragLeves: (e: React.DragEvent<HTMLLIElement>) => void;
 }) {
-  const { reducer } = useAppContext();
+  const { reducer, setDraggingElement, draggingElement } = useAppContext();
   const [title, setTitle] = React.useState<string>(list.title ?? "");
   const [isEditing, setisEditing] = React.useState<boolean>(false);
+  const [dragElementDimensions, setDragElementDimensions] = React.useState<{
+    width: number;
+    height: number;
+  }>();
 
   const removeList = () => {
     reducer({
@@ -44,8 +50,20 @@ function List({
     });
   };
 
+  const onCardDragStart = (e: React.DragEvent<HTMLLIElement>, id: Id) => {
+    setDraggingElement({ id, type: "CARD" });
+    e.stopPropagation();
+    const { width, height } = e.currentTarget.getBoundingClientRect();
+    setDragElementDimensions({ width, height });
+  };
+
   return (
-    <li className="flex-shrink-0 block" draggable>
+    <li
+      className="flex-shrink-0 block"
+      draggable={!draggingElement?.type}
+      onDragStart={(e) => onDragStarts(e, list.id)}
+      onDragEnd={onDragLeves}
+    >
       <div className="w-[272px] max-h-full flex flex-col bg-background-list rounded-xl">
         {/* header */}
         <div className="px-3 pt-3 flex items-center justify-between">
@@ -59,7 +77,7 @@ function List({
             value={title}
             readOnly={!isEditing}
             onChange={(e) => setTitle(e.target.value)}
-            onFocus={() => setisEditing(true)}
+            onClick={() => setisEditing(true)}
             onBlur={updateTitle}
           />
           <button
@@ -72,16 +90,25 @@ function List({
 
         {/* cards */}
         <ol className="p-2 flex-1 flex flex-col overflow-y-auto overflow-x-hidden list-none">
-          <Indicator onDrop={() => onCardDrop(0)} />
+          <Indicator
+            onDrop={() => onCardDrop(0)}
+            h={dragElementDimensions?.height}
+            w={dragElementDimensions?.width}
+          />
           {list?.cards?.map((card, idx) => (
             <React.Fragment key={card.id}>
               <Card
                 card={card}
                 listId={list.id}
                 listTitle={list.title}
-                setDragCard={setDragCard}
+                onDragStarts={(e) => onCardDragStart(e, card.id)}
+                onDragLeves={() => setDraggingElement(null)}
               />
-              <Indicator onDrop={() => onCardDrop(idx + 1)} />
+              <Indicator
+                onDrop={() => onCardDrop(idx + 1)}
+                h={dragElementDimensions?.height}
+                w={dragElementDimensions?.width}
+              />
             </React.Fragment>
           ))}
         </ol>

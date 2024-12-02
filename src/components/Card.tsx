@@ -11,17 +11,19 @@ function Card({
   card,
   listId,
   listTitle,
-  setDragCard,
+  onDragStarts,
+  onDragLeves,
 }: {
   card: ICard;
   listTitle: string;
   listId: Id;
-  setDragCard: React.Dispatch<Id | null>;
+  onDragStarts: (e: React.DragEvent<HTMLLIElement>) => void;
+  onDragLeves: (e: React.DragEvent<HTMLLIElement>) => void;
 }) {
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const dategRef = React.useRef<HTMLInputElement>(null);
-  const { reducer } = useAppContext();
+  const { reducer,draggingElement } = useAppContext();
 
   const [title, setTitle] = React.useState<string>(card.title || "");
   const [isTitleEditing, setisTitleEditing] = React.useState<boolean>(false);
@@ -114,12 +116,12 @@ function Card({
     <>
       <li
         className="isolate relative shadow-sm cursor-pointer active:opacity-50 "
-        draggable
+        draggable={!draggingElement?.type}
         onClick={openDialog}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onDragStart={() => setDragCard(card.id)}
-        onDragEnd={() => setDragCard(null)}
+        onDragStart={onDragStarts}
+        onDragEnd={onDragLeves}
       >
         <div className="bg-background-card flex-1 text-sm px-3 py-2 h-[42px] flex items-center rounded-lg border-2 hover:border-background-primary">
           <div className="flex items-center justify-between w-full">

@@ -69,6 +69,10 @@ export const reducer = (
       );
     }
 
+    case "REORDER_LISTS": {
+      return action.payload.newList;
+    }
+
     case "RESET_ALL": {
       return [];
     }

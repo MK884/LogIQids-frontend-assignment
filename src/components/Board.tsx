@@ -1,11 +1,15 @@
-import { AddList, List } from "@/components";
+import { AddList, Indicator, List, ListIndicator } from "@/components";
 import { useAppContext } from "@/context";
 import React from "react";
 
 function Board() {
-  const { lists, reducer } = useAppContext();
+  const { lists, reducer, draggingElement, setDraggingElement } =
+    useAppContext();
 
-  const [draggingCard, setDraggingCard] = React.useState<Id | null>(null);
+  const [dragElementDimensions, setDragElementDimensions] = React.useState<{
+    width: number;
+    height: number;
+  }>();
 
   const addNewList = (title: string) => {
     if (!title?.trim()?.length) return;
@@ -17,13 +21,9 @@ function Board() {
   };
 
   const onCardDrop = (position: number, listId: Id) => {
-    console.log(
-      `card is going to place in list ${listId} at postion ${position}`
-    );
-
     //  source list
     const sourceList = lists.find((list) =>
-      list.cards.some((card) => card.id === draggingCard)
+      list.cards.some((card) => card.id === draggingElement?.id)
     );
 
     if (!sourceList) return;
@@ -34,7 +34,7 @@ function Board() {
     if (!destinationList) return;
 
     const draggedCardIndex = sourceList.cards.findIndex(
-      (card) => card.id === draggingCard
+      (card) => card.id === draggingElement?.id
     );
 
     if (draggedCardIndex === -1) return;
@@ -59,23 +59,66 @@ function Board() {
       },
     });
 
-    setDraggingCard(null);
+    setDraggingElement(null);
+  };
+
+  const onListDrop = (idx: number) => {
+    const listIndex = lists.findIndex(
+      (list) => list.id === draggingElement?.id
+    );
+
+    if (listIndex === -1) return;
+
+    console.log(`list of index ${listIndex} is going to place at ${idx}`);
+
+    const newLists = lists.filter((list) => list.id !== draggingElement?.id);
+
+    const draggingList = lists[listIndex];
+
+    newLists.splice(idx, 0, draggingList);
+
+    reducer({
+      type: "REORDER_LISTS",
+      payload: {
+        newList: newLists,
+      },
+    });
+
+    setDraggingElement(null);
+  };
+
+  const onListDragStart = (e: React.DragEvent<HTMLLIElement>, listId: Id) => {
+    setDraggingElement({ id: listId, type: "LIST" });
+    const { width, height } = e.currentTarget.getBoundingClientRect();
+    setDragElementDimensions({ width, height });
   };
 
   return (
     <>
       <ol className="overflow-y-hidden flex overflow-x-auto p-3 h-full ">
-        <div className="flex gap-3 h-full max-h-full">
-          {lists?.map((list) => (
-            <List
-              key={list.id}
-              list={list}
-              setDragCard={setDraggingCard}
-              onCardDrop={(i) => onCardDrop(i, list.id)}
-            />
+        <ol className="flex gap-3 h-full max-h-full list-none">
+          <ListIndicator
+            onDrop={() => onListDrop(0)}
+            h={dragElementDimensions?.height}
+            w={dragElementDimensions?.width}
+          />
+          {lists?.map((list, idx) => (
+            <React.Fragment key={list.id}>
+              <List
+                list={list}
+                onCardDrop={(i) => onCardDrop(i, list.id)}
+                onDragStarts={onListDragStart}
+                onDragLeves={() => setDraggingElement(null)}
+              />
+              <ListIndicator
+                onDrop={() => onListDrop(idx+1)}
+                h={dragElementDimensions?.height}
+                w={dragElementDimensions?.width}
+              />
+            </React.Fragment>
           ))}
           <AddList onAdd={addNewList} />
-        </div>
+        </ol>
       </ol>
     </>
   );

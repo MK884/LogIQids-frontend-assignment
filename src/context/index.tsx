@@ -4,6 +4,8 @@ import { reducer as AppReducer } from "./reducers";
 const defaultState: IAppContext = {
   lists: [],
   reducer: () => {},
+  draggingElement: null,
+  setDraggingElement: () => {},
 };
 
 export const AppContext = React.createContext<IAppContext>(defaultState);
@@ -18,6 +20,9 @@ export const AppContextProvider = ({
   const item = localStorage.getItem("trello-lists");
   const getTasks = item ? JSON.parse(item) : initialState;
 
+  const [draggingElement, setDraggingElement] =
+    React.useState<draggingelement>(null);
+
   const [lists, reducer] = React.useReducer(AppReducer, getTasks);
 
   React.useEffect(() => {
@@ -25,7 +30,9 @@ export const AppContextProvider = ({
   }, [lists]);
 
   return (
-    <AppContext.Provider value={{ lists, reducer }}>
+    <AppContext.Provider
+      value={{ lists, reducer, draggingElement, setDraggingElement }}
+    >
       {children}
     </AppContext.Provider>
   );
